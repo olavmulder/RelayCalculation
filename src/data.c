@@ -187,6 +187,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	{
 		return (DISTANCE_BETWEEN_POINTS*(index) + (cross*0.5) );
 	}
+	return (-1);
 
 }
 

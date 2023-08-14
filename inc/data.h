@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include "file.h"
 extern uint8_t ARRAY_SCAN_POINTS[5];
 #define AMOUNT_TIMES (sizeof(ARRAY_SCAN_POINTS) / sizeof(uint8_t))
+
+
+int CalculateRelay(double *timeIn, double *timeOut, size_t len);
 
 int DataGet(double*arrOut, size_t len);
 int DataSetSpeed(double *speed, double *time, size_t len);

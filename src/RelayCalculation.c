@@ -6,9 +6,14 @@
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
  ============================================================================
+ joz = robots,
+ fullwoods = melk systemen.,
+ westwoud / middenmeer (ingen) joz.nl
+
  */
 
 #include "../inc/data.h"
+#include "../inc/file.h"
 #include <assert.h>
 
 void testData();
@@ -16,38 +21,54 @@ void testCrossPoint();
 void testCallPoint();
 void testAvgSpeedToPoint();
 void testFindTakeOff();
-int main(void) {
-	/*testData();
+void testFile();
+
+int main(int argv, char** argc) {
+	/*testFile();
+	testData();
 	testFindTakeOff();
 	testAvgSpeedToPoint();
 	testCallPoint();
 	testCrossPoint();*/
+	if(argv != 2)
+	{
+		printf("give only the file name\n");
+		return (-1);
+	}
+	else
+	{
+		//receive data of outgoing runner
+		double timeOut[AMOUNT_TIMES];
+		//receive data of incoming runner
+		double timeIn[AMOUNT_TIMES];
+		if(GetDoubleFromFile(argc[1], timeIn, timeOut, AMOUNT_TIMES ) < 0)
+		{
+			return (-1);
+		}
+		//calculate speed of both datasets
+		if(CalculateRelay(timeIn, timeOut, AMOUNT_TIMES) < 0)
+		{
+			printf("CalculateRelay went wrong");
+			return (-1);
+		}
 
-	//receive data of outgoing runner
-	double timeOut[AMOUNT_TIMES];
-	printf("outgoining runner:\n");
-	if(DataGet(timeOut, AMOUNT_TIMES) != 0)
-	{
-		printf("error on DataGet\n");
-		return (-1);
-	}
-	//receive data of incoming runner
-	double timeIn[AMOUNT_TIMES];
-	printf("incoming runner:\n");
-	if(DataGet(timeIn, AMOUNT_TIMES) != 0)
-	{
-		printf("error on DataGet\n");
-		return (-1);
-	}
-	//calculate speed of both datasets
-	if(CalculateRelay(timeIn, timeOut, AMOUNT_TIMES) < 0)
-	{
-		printf("CalculateRelay went wrong");
-		return (-1);
 	}
 	return (EXIT_SUCCESS);
 }
+void testFile()
+{
+	double timeIn[5];
+	double timeOut[5];
+	assert(GetDoubleFromFile("times.txt", timeIn, timeOut, 5) == 0);
+	for(size_t i = 0; i < 5; i++)
+	{
+		printf("in:%ld; %f\n", i, timeIn[i]);
+		printf("out:%ld; %f\n", i, timeOut[i]);
 
+	}
+	assert(timeOut[0] == 3.10);
+	assert(timeIn[0] == 2.24);
+}
 void testData()
 {
 
