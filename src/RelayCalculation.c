@@ -17,11 +17,12 @@ void testCallPoint();
 void testAvgSpeedToPoint();
 void testFindTakeOff();
 int main(void) {
-	//testData();
+	/*testData();
 	testFindTakeOff();
-	/*testAvgSpeedToPoint();
+	testAvgSpeedToPoint();
 	testCallPoint();
-	testCrossPoint();
+	testCrossPoint();*/
+
 	//receive data of outgoing runner
 	double timeOut[AMOUNT_TIMES];
 	printf("outgoining runner:\n");
@@ -39,27 +40,12 @@ int main(void) {
 		return (-1);
 	}
 	//calculate speed of both datasets
-	double speedIn[AMOUNT_TIMES];
-	double speedOut[AMOUNT_TIMES];
-	DataSetSpeed(speedIn, timeIn, AMOUNT_TIMES);
-	DataSetSpeed(speedOut, timeOut, AMOUNT_TIMES);
-	//find cross point
-	int index;
-	if((index = DataFindCrossPoint(speedIn,speedOut,AMOUNT_TIMES)) < 0)
+	if(CalculateRelay(timeIn, timeOut, AMOUNT_TIMES) < 0)
 	{
-		printf("cant find crosspoint\n");
+		printf("CalculateRelay went wrong");
 		return (-1);
 	}
-	double exchange = DataFindExchangePoint(index, speedIn, speedOut, AMOUNT_TIMES);
-	if(exchange < 0)
-	{
-		printf("Cant find exchange point\n");
-		return (-1);
-	}
-*/
-
-
-	return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }
 
 void testData()
@@ -90,6 +76,7 @@ void testData()
 }
 void testCrossPoint()
 {
+	//valid cross point
 	double t1[AMOUNT_TIMES] ={2,2,3,3,4};
 	double t2[AMOUNT_TIMES] ={4,4,3.5,3,4};
 	int res = DataFindCrossPoint(t2,t1,AMOUNT_TIMES);
@@ -98,11 +85,16 @@ void testCrossPoint()
 	double exchange = DataFindExchangePoint(res, t2, t1, AMOUNT_TIMES);
 	printf("exchangePoint is %.2f\n", exchange);
 
-	double t3[AMOUNT_TIMES] ={4,4,4,4,4};
-	double t4[AMOUNT_TIMES] ={3,3,2,2,1};
-	exchange = DataFindExchangePoint(0, t3, t4, AMOUNT_TIMES);
-	printf("exchangePoint is %.2f\n", exchange);
+	//when no crosspoint exchange at 15
+	double t5[] = {5,5,5,5,5};
+	double t6[] = {1,2,3,3.5,4};
+	res = DataFindCrossPoint(t5, t6, AMOUNT_TIMES);
+	exchange = DataFindExchangePoint(res, t5, t6, AMOUNT_TIMES);
+	assert(exchange == 15);
 }
+
+//z4wood
+//lisa
 void testCallPoint()
 {
 	double time = 1;

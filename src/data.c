@@ -12,6 +12,33 @@ uint8_t ARRAY_SCAN_POINTS[] = {0, 5, 10, 15, 20};
 #define DISTANCE_BETWEEN_POINTS 5
 
 /**
+ * Do all calcualtions with given input
+ * @return
+ */
+int CalculateRelay(double *timeIn, double *timeOut, size_t len)
+{
+	double speedIn[len];
+	double speedOut[len];
+	DataSetSpeed(speedIn, timeIn, len);
+	DataSetSpeed(speedOut, timeOut, len);
+	int index = 0;
+	if((index = DataFindCrossPoint(speedIn,speedOut,AMOUNT_TIMES)) < 0)
+	{
+		return (-1);
+	}
+	double exchange = DataFindExchangePoint(index, speedIn, speedOut, AMOUNT_TIMES);
+	if(exchange < 0)
+	{
+		return (-1);
+	}
+	printf("\nexchange: %.2f\n", exchange);
+	double takeOff = DataFindTakeOffPoint(exchange, timeIn, timeOut, speedIn, speedOut, 5);
+	printf("takeoff: %.2f\n", takeOff);
+	double callPoint = DataFindCallPoint(1,speedIn[index], exchange);
+	printf("callpoint: %.2f\n", callPoint);
+	return (0);
+}
+/**
  * calculate avg speed between detection points
  * @param speed
  * @param time
@@ -73,7 +100,7 @@ int DataFindCrossPoint(double *speedIn, double *speedOut, size_t len)
 		return (-1);
 	}
 	size_t index = 0;
-	while(speedIn[index] >= speedOut[index])
+	while(speedIn[index] > speedOut[index])
 	{
 		index++;
 		if(index >= len)
@@ -95,13 +122,17 @@ int DataFindCrossPoint(double *speedIn, double *speedOut, size_t len)
  */
 double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t len)
 {
-	double exchange = 0.0;
 	if(speedIn == NULL || speedOut == NULL)
 	{
 		printf("empty array\n");
 		return (-1);
 	}
-
+	//no found crosspoint from dataFindCrossPoint
+	if(index == -2)
+	{
+		/*exchange at max distnace -distance between_points when there is no cross point*/
+		return  ((AMOUNT_TIMES-2) * DISTANCE_BETWEEN_POINTS);
+	}
 	double speedDiffIn;
 	double speedDiffOut;
 	bool indexZero = false;
@@ -137,10 +168,26 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 		tempIn += speedIncreaseIn;
 		tempOut += speedIncreaseOut;
 	}
+
 	int cross = DataFindCrossPoint(temp_speedIn, temp_speedOut,
 			DISTANCE_BETWEEN_POINTS*2);
-	exchange = DISTANCE_BETWEEN_POINTS*(index) + (cross*0.5);
-	return (exchange);
+	if(cross < 0)
+	{
+		if(cross == -1)
+		{
+			return (-1);
+		}
+		else if(cross == -2)
+		{
+			/*exchange at max distnace -distance between_points when there is no cross point*/
+			return  ((AMOUNT_TIMES-2) * DISTANCE_BETWEEN_POINTS);
+		}
+	}
+	else
+	{
+		return (DISTANCE_BETWEEN_POINTS*(index) + (cross*0.5) );
+	}
+
 }
 
 double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size_t len)
@@ -171,7 +218,7 @@ double DataFindTakeOffPoint(double exchangePoint, double* timeIn, double* timeOu
 {
 	if(speedIn == NULL || speedOut == NULL)
 	{
-		return -1;
+		return (-1);
 	}
 	double outAvgSpeed = GetAvgSpeedToPoint(exchangePoint, timeOut, speedOut, len);
 	double inAvgSpeed = GetAvgSpeedToPoint(exchangePoint, timeIn, speedIn, len);
