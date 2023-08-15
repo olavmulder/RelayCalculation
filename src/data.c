@@ -27,12 +27,12 @@ int CalculateRelay(double *timeIn, double *timeOut, size_t len)
 	{
 		return (-1);
 	}
-	printf("\nexchange: %.2f\n", exchange);
+	printf("exchange: %.2f\n", exchange);
 
-	/*double takeOff = DataFindTakeOffPoint(exchange, timeIn, timeOut, speedIn, speedOut, AMOUNT_TIMES);
+	double takeOff = DataFindTakeOffPoint(exchange, timeIn, timeOut, speedIn, speedOut, AMOUNT_TIMES);
 	printf("takeoff: %.2f\n", takeOff);
-	double callPoint = DataFindCallPoint(1,speedIn[index], exchange);
-	printf("callpoint: %.2f\n", callPoint);*/
+	double callPoint = DataFindCallPoint(0.8,speedIn[(int)(exchange/DISTANCE_BETWEEN_POINTS)], exchange);
+	printf("callpoint: %.2f\n", callPoint);
 	return (0);
 }
 /**
@@ -95,7 +95,6 @@ double DataFindExchangePoint(double*speedIn, double *speedOut, size_t len)
 	if(index == -2)
 	{
 		/*exchange at max distance -distance between_points when there is no cross point*/
-		printf("max exchange distance %d", MAX_EXCHANGE_DISTANCE);
 		return  (MAX_EXCHANGE_DISTANCE);
 	}
 
@@ -169,18 +168,27 @@ double DataFindExchangePoint(double*speedIn, double *speedOut, size_t len)
 	return (-1);
 
 }
-
-double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size_t len)
+/**
+ * get time to reach point for runner including
+ * the reaction time
+ * @param exchangePoint
+ * @param time
+ * @param speed
+ * @param len
+ * @return
+ */
+double GetTimeToPoint(double exchangePoint, double *time, double *speed,
+						size_t len, double reactionTime)
 {
-	//get time for every 5 meter
 	double tempExchange = exchangePoint;
-	double totalTime = 0;
 	size_t i = 0;
-	while(tempExchange > 0)
+	double totalTime = 0;
+	while(tempExchange > DISTANCE_BETWEEN_POINTS)
 	{
 		if(i < len)
 		{
 			totalTime += time[i];
+
 		}else
 			break;
 		i++;
@@ -189,30 +197,35 @@ double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size
 	if(i < len)
 		totalTime += (tempExchange / speed[i]);
 	else
-		return -1;
-	return (exchangePoint / totalTime);
+		return (-1);
+	/*v = s/t*/
+	return (totalTime+reactionTime);
 }
+
 
 double DataFindTakeOffPoint(double exchangePoint, double* timeIn, double* timeOut,
 						double* speedIn, double* speedOut, size_t len)
 {
+	/*
+	 * v_in * t = v_out * t
+	 * startXa = startXb +
+	 * person to = in,
+	 * person one = out
+	 */
+	double reactionTime = 0.200;
 	if(speedIn == NULL || speedOut == NULL)
 	{
 		return (-1);
 	}
-	double outAvgSpeed = GetAvgSpeedToPoint(exchangePoint, timeOut, speedOut, len);
-	double inAvgSpeed = GetAvgSpeedToPoint(exchangePoint, timeIn, speedIn, len);
+	double timeForOut = GetTimeToPoint(exchangePoint, timeOut, speedOut, len, reactionTime);
+	double timeForIn = GetTimeToPoint(exchangePoint, timeIn, speedIn, len, 0.00);
+	double avgSpeedIn = exchangePoint / timeForIn;
+	double avgSpeedOut = exchangePoint / timeForOut;
 
-	double timeToReachExchangePointIn = (exchangePoint / inAvgSpeed);
-	double timeToReachExchangePointOut = (exchangePoint / outAvgSpeed);
-	double diffTime = timeToReachExchangePointOut - timeToReachExchangePointIn;
-	if(diffTime < 0)
-	{
-		printf("incoming is slower..\n");
-		return (-1);
-	}
-	double takeoffDistance = inAvgSpeed * diffTime;
-	return (takeoffDistance);
+	double relativeSpeed = avgSpeedIn - avgSpeedOut;
+	double distanceAhead = (avgSpeedOut * timeForIn) / relativeSpeed; // meters
+	/*s = v * t*/
+	return distanceAhead;
 }
 
 double DataFindCallPoint(double time, double speedAtExchange, double exchangePoint)

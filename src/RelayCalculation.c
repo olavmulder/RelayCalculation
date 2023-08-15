@@ -20,7 +20,7 @@ void testData();
 void testCrossPoint();
 void testCallPoint();
 void testExchangePoint();
-
+void testTakeOff();
 
 void testAvgSpeedToPoint();
 void testFindTakeOff();
@@ -56,8 +56,8 @@ int main(int argv, char** argc) {
 	//testFile();
 	//testData();
 	//testCrossPoint();
-	testExchangePoint();
-
+	//testExchangePoint();
+	//testTakeOff();
 	/*testFindTakeOff();
 	testAvgSpeedToPoint();
 	testCallPoint();
@@ -76,8 +76,7 @@ int main(int argv, char** argc) {
 			return (-1);
 		}
 
-		PrintAllPossibleExchanges(atleteData, 2);
-		//calculate speed of both datasets
+		PrintAllPossibleExchanges(atleteData, amountAtletes);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -153,6 +152,32 @@ void testExchangePoint()
 	DataSetSpeed(speedOut, atleteData[0].timesOut, AMOUNT_TIMES);
 	exchange = DataFindExchangePoint(speedIn, speedOut, AMOUNT_TIMES);
 	printf("exchange %.2f\n", exchange);
+
+}
+void testTakeOff()
+{
+	AtleteData atleteData[2];
+	assert(GetDoubleFromFile("times_old.txt", atleteData, 2) == 0);
+
+	double speedIn[AMOUNT_TIMES], speedOut[AMOUNT_TIMES];
+	DataSetSpeed(speedIn, atleteData[1].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[0].timesOut, AMOUNT_TIMES);
+	double exchange = DataFindExchangePoint(speedIn, speedOut, AMOUNT_TIMES);
+	printf("exchange %.2f\n", exchange);
+
+	double takeOff = DataFindTakeOffPoint(exchange, atleteData[1].timesIn,
+						atleteData[0].timesOut, speedIn, speedOut, AMOUNT_TIMES);
+	printf("takeOff: %.2f\n", takeOff);
+
+	//other sample
+	DataSetSpeed(speedIn, atleteData[0].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[1].timesOut, AMOUNT_TIMES);
+	exchange = DataFindExchangePoint(speedIn, speedOut, AMOUNT_TIMES);
+	printf("exchange %.2f\n", exchange);
+
+	takeOff = DataFindTakeOffPoint(exchange, atleteData[0].timesIn,
+						atleteData[1].timesOut, speedIn, speedOut, AMOUNT_TIMES);
+	printf("takeOff: %.2f\n", takeOff);
 
 }
 /*
