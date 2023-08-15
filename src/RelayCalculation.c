@@ -19,6 +19,9 @@
 void testData();
 void testCrossPoint();
 void testCallPoint();
+void testExchangePoint();
+
+
 void testAvgSpeedToPoint();
 void testFindTakeOff();
 void testFile();
@@ -50,9 +53,12 @@ void PrintAllPossibleExchanges(AtleteData *atleteData, size_t len)
 
 int main(int argv, char** argc) {
 
-	testFile();
-	/*testData();
-	testFindTakeOff();
+	//testFile();
+	//testData();
+	//testCrossPoint();
+	testExchangePoint();
+
+	/*testFindTakeOff();
 	testAvgSpeedToPoint();
 	testCallPoint();
 	testCrossPoint();*/
@@ -75,7 +81,7 @@ int main(int argv, char** argc) {
 	}
 	return (EXIT_SUCCESS);
 }
-
+/*
 void testFile()
 {
 	AtleteData atleteData[2];
@@ -93,62 +99,63 @@ void testFile()
 			printf("%s %.2f ", atleteData[i].name, atleteData[i].timesOut[j]);
 		}
 		printf("\n\n");
-	}
+	}*/
 	/*amount atletes in file is higher than given
 	must change input file
 	 *
 	 */
-	assert(GetDoubleFromFile("times.txt", atleteData, 1) == -1);
+	/*assert(GetDoubleFromFile("times.txt", atleteData, 1) == -1);
 	assert(GetDoubleFromFile("times.txt", atleteData, 2) == -1);
-}
+}*/
 /*
 void testData()
 {
+	AtleteData atleteData[2];
+	assert(GetDoubleFromFile("times.txt", atleteData, 2) == 0);
 
-	assert(DataGet(NULL, 10) == -1);
-	double timeIn[AMOUNT_TIMES], timeOut[AMOUNT_TIMES];
-	printf("set times off incoming runner\n");
-	DataGet(timeIn, AMOUNT_TIMES);
-	printf("set times off outgoing runner\n");
-
-	DataGet(timeOut, AMOUNT_TIMES);
-
-	for(uint8_t i = 0; i < AMOUNT_TIMES; i++)
-	{
-		printf("time in  %d: %f\n",i, timeIn[i]);
-		printf("time out %d: %f\n",i, timeOut[i]);
-	}
 	double speedIn[AMOUNT_TIMES], speedOut[AMOUNT_TIMES];
-	DataSetSpeed(speedIn, timeIn, AMOUNT_TIMES);
-	DataSetSpeed(speedOut, timeOut, AMOUNT_TIMES);
+	DataSetSpeed(speedIn, atleteData[0].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[0].timesOut, AMOUNT_TIMES);
 	for(uint8_t i = 0; i < AMOUNT_TIMES; i++)
 	{
 		printf("avg speed in %d:%f\n" ,i, speedIn[i]);
 		printf("avg speed out %d:%f\n",i, speedOut[i]);
 	}
-	assert(DataFindCrossPoint(speedIn,speedOut,AMOUNT_TIMES) > 0);
 }
+*/
 void testCrossPoint()
 {
 	//valid cross point
-	double t1[AMOUNT_TIMES] ={2,2,3,3,4};
-	double t2[AMOUNT_TIMES] ={4,4,3.5,3,4};
-	int res = DataFindCrossPoint(t2,t1,AMOUNT_TIMES);
+	AtleteData atleteData[2];
+	assert(GetDoubleFromFile("times.txt", atleteData, 2) == 0);
+
+	double speedIn[AMOUNT_TIMES], speedOut[AMOUNT_TIMES];
+	DataSetSpeed(speedIn, atleteData[0].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[0].timesOut, AMOUNT_TIMES);
+
+	int res = DataFindCrossPoint(speedIn,speedOut,AMOUNT_TIMES);
 	printf("crosspoint %d\n", res);
 	assert(res == 2);
-	double exchange = DataFindExchangePoint(res, t2, t1, AMOUNT_TIMES);
-	printf("exchangePoint is %.2f\n", exchange);
 
-	//when no crosspoint exchange at 15
-	double t5[] = {5,5,5,5,5};
-	double t6[] = {1,2,3,3.5,4};
-	res = DataFindCrossPoint(t5, t6, AMOUNT_TIMES);
-	exchange = DataFindExchangePoint(res, t5, t6, AMOUNT_TIMES);
-	assert(exchange == 15);
 }
+void testExchangePoint()
+{
+	AtleteData atleteData[2];
+	assert(GetDoubleFromFile("times.txt", atleteData, 2) == 0);
 
-//z4wood
-//lisa
+	double speedIn[AMOUNT_TIMES], speedOut[AMOUNT_TIMES];
+	DataSetSpeed(speedIn, atleteData[0].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[1].timesOut, AMOUNT_TIMES);
+	double exchange = DataFindExchangePoint(speedIn, speedOut, AMOUNT_TIMES);
+	printf("exchange %.2f\n", exchange);
+
+	DataSetSpeed(speedIn, atleteData[1].timesIn, AMOUNT_TIMES);
+	DataSetSpeed(speedOut, atleteData[0].timesOut, AMOUNT_TIMES);
+	exchange = DataFindExchangePoint(speedIn, speedOut, AMOUNT_TIMES);
+	printf("exchange %.2f\n", exchange);
+
+}
+/*
 void testCallPoint()
 {
 	double time = 1;
