@@ -113,9 +113,6 @@ double DataFindExchangePoint(double*speedIn, double *speedOut, size_t len)
 		index = 0;
 		tempOut = 0.00;
 		tempIn = speedIn[0];
-
-		/*temperaril*/
-		return (-1);
 	}
 	else
 	{
