@@ -23,52 +23,85 @@ void testAvgSpeedToPoint();
 void testFindTakeOff();
 void testFile();
 
+void PrintAllPossibleExchanges(AtleteData *atleteData, size_t len)
+{
+	for(size_t i = 0 ; i < len; i++)
+	{
+		for(size_t j = 0; j < len; j++)
+		{
+			if(j != i)
+			{
+				/*exchange i to j*/
+				printf("%s to %s: \n", atleteData[i].name, atleteData[j].name);
+				if(CalculateRelay(&atleteData[i].timesIn[0], &atleteData[j].timesOut[0],
+						AMOUNT_TIMES)< 0)
+				{
+					printf("CalculateRelay went wrong");
+
+				}
+				printf("\n");
+				printf("\n");
+			}
+
+		}
+
+	}
+}
+
 int main(int argv, char** argc) {
-	/*testFile();
-	testData();
+
+	testFile();
+	/*testData();
 	testFindTakeOff();
 	testAvgSpeedToPoint();
 	testCallPoint();
 	testCrossPoint();*/
-	if(argv != 2)
+	if(argv != 3)
 	{
-		printf("give only the file name\n");
+		printf("give only the file name & amount atlets\n");
 		return (-1);
 	}
 	else
 	{
-		//receive data of outgoing runner
-		double timeOut[AMOUNT_TIMES];
-		//receive data of incoming runner
-		double timeIn[AMOUNT_TIMES];
-		if(GetDoubleFromFile(argc[1], timeIn, timeOut, AMOUNT_TIMES ) < 0)
+		size_t amountAtletes = atoi(argc[2]);
+		AtleteData atleteData[amountAtletes];
+		if(GetDoubleFromFile(argc[1], atleteData, amountAtletes ) < 0)
 		{
-			return (-1);
-		}
-		//calculate speed of both datasets
-		if(CalculateRelay(timeIn, timeOut, AMOUNT_TIMES) < 0)
-		{
-			printf("CalculateRelay went wrong");
 			return (-1);
 		}
 
+		PrintAllPossibleExchanges(atleteData, 2);
+		//calculate speed of both datasets
 	}
 	return (EXIT_SUCCESS);
 }
+
 void testFile()
 {
-	double timeIn[5];
-	double timeOut[5];
-	assert(GetDoubleFromFile("times.txt", timeIn, timeOut, 5) == 0);
-	for(size_t i = 0; i < 5; i++)
+	AtleteData atleteData[2];
+	GetDoubleFromFile("times.txt", atleteData, 2);
+	for(size_t i = 0; i < 2;i++)
 	{
-		printf("in:%ld; %f\n", i, timeIn[i]);
-		printf("out:%ld; %f\n", i, timeOut[i]);
-
+		printf("in: ");
+		for(size_t j =0; j < AMOUNT_TIMES; j++)
+		{
+			printf("%s %.2f ", atleteData[i].name, atleteData[i].timesIn[j]);
+		}
+		printf("\n out: ");
+		for(size_t j =0; j < AMOUNT_TIMES; j++)
+		{
+			printf("%s %.2f ", atleteData[i].name, atleteData[i].timesOut[j]);
+		}
+		printf("\n\n");
 	}
-	assert(timeOut[0] == 3.10);
-	assert(timeIn[0] == 2.24);
+	/*amount atletes in file is higher than given
+	must change input file
+	 *
+	 */
+	assert(GetDoubleFromFile("times.txt", atleteData, 1) == -1);
+	assert(GetDoubleFromFile("times.txt", atleteData, 2) == -1);
 }
+/*
 void testData()
 {
 
@@ -155,3 +188,4 @@ void testFindTakeOff()
 	printf("callpoint: %.2f\n", callPoint);
 
 }
+*/

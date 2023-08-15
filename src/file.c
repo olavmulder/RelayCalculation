@@ -1,9 +1,13 @@
 #include "../inc/file.h"
 
-
-
-int GetDoubleFromFile(char* name,
-						double* timeIn, double *timeOut, size_t len )
+/**
+ * get name, in/out string and 3 times
+ * @param name
+ * @param atleteData
+ * @param len
+ * @return
+ */
+int GetDoubleFromFile(char* name, AtleteData *atleteData, size_t len)
 {
 	FILE *f;
 	f = fopen(name, "r");
@@ -12,61 +16,54 @@ int GetDoubleFromFile(char* name,
 		printf("can't open file\n");
 		return (-1);
 	}
-
+	bool firstLoop = true;
 	size_t index = 0;
-	size_t max_name_length = 50;
-	char type[2][max_name_length];
-	float timeBuffer[2][len];
-	while(fscanf(f, "%s %f %f %f %f %f",
-			type[index],
-			&timeBuffer[index][0],
-			&timeBuffer[index][1],
-			&timeBuffer[index][2],
-			&timeBuffer[index][3],
-			&timeBuffer[index][4])> 0)
+	size_t maxNameLength = 50;
+	char lastName[maxNameLength];
+	char tempAtletesName[maxNameLength];
+	char type[10];
+	float timeBuffer[AMOUNT_TIMES];
+	while(fscanf(f, "%s %s %f %f %f",
+			tempAtletesName,
+			type,
+			&timeBuffer[0],
+			&timeBuffer[1],
+			&timeBuffer[2])> 0)
 	{
-		/*printf("%s:", type[index]);
-		for(size_t i = 0; i < len;i++)
+		if(index >= len)
 		{
-			printf(" %f", timeBuffer[index][i]);
+			return(-1);
 		}
-		printf("\n");
-		fflush(stdout);*/
-		index++;
-	}
-	if(strcmp(type[0], "in") == 0)
-	{
-		for(size_t i = 0; i < len;i++)
+		/*if new name index++*/
+		if(strcmp(lastName, tempAtletesName) != 0 && !firstLoop)
 		{
-			timeIn[i] = timeBuffer[0][i];
+			index++;
 		}
-		if(strcmp(type[1], "out") ==0)
+		if(strcmp(type, "in") == 0)
 		{
-			for(size_t i = 0; i < len;i++)
+			snprintf(atleteData[index].name, maxNameLength, "%s", tempAtletesName);
+			snprintf(lastName, maxNameLength, "%s", tempAtletesName);
+			for(size_t i = 0; i < AMOUNT_TIMES; i++)
 			{
-				timeOut[i] = timeBuffer[1][i];
+				atleteData[index].timesIn[i] = timeBuffer[i];
 			}
 		}
-	}
-	else if(strcmp(type[0], "out") ==0)
-	{
-		for(size_t i = 0; i < len;i++)
+		else if(strcmp(type, "out") == 0)
 		{
-			timeOut[i] = timeBuffer[0][i];
-		}
-		if(strcmp(type[1], "in") ==0)
-		{
-			for(size_t i = 0; i < len;i++)
+			snprintf(atleteData[index].name, maxNameLength, "%s", tempAtletesName);
+			snprintf(lastName, maxNameLength, "%s", tempAtletesName);
+			for(size_t i = 0; i < AMOUNT_TIMES; i++)
 			{
-				timeIn[i] = timeBuffer[1][i];
+				atleteData[index].timesOut[i] = timeBuffer[i];
 			}
+		}
+		else
+		{
+			printf("couldn't find 'in' or 'out'\n");
+			return (-1);
 		}
 
-	}
-	else
-	{
-		printf("couldn't find 'in' or 'out'\n");
-		return (-1);
+		if(firstLoop)firstLoop = false;
 	}
 	return (0);
 }
