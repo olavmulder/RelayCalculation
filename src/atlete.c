@@ -45,6 +45,7 @@ int AtleteSetSpeed(AtleteData *atlete)
 	return (0);
 }
 
+
 void TestAtlete()
 {
 	AtleteData atleteData[2];

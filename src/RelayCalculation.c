@@ -18,6 +18,7 @@ int main() {
 
 	TestFile();
 	TestAtlete();
-
+	TestCrossPoint();
+	return 0;
 }
 

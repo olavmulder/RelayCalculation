@@ -30,7 +30,7 @@ int CalculateRelay(double *timeIn, double *timeOut, size_t len)
 	}
 	printf("\nexchange: %.2f\n", exchange);
 
-	/*double takeOff = DataFindTakeOffPoint(exchange, timeIn, timeOut, speedIn, speedOut, AMOUNT_TIMES);
+	double takeOff = DataFindTakeOffPoint(exchange, timeIn, timeOut, speedIn, speedOut, AMOUNT_TIMES);
 	printf("takeoff: %.2f\n", takeOff);
 	double callPoint = DataFindCallPoint(1,speedIn[index], exchange);
 	printf("callpoint: %.2f\n", callPoint);
@@ -59,18 +59,14 @@ int DataSetSpeed(double *speed, double *time, size_t len)
 }
 */
 
-int DataFindCrossPoint(double *speedIn, double *speedOut, size_t len)
+int DataFindCrossPoint(AtleteData *in, AtleteData *out)
 {
-	if(speedIn == NULL || speedOut == NULL)
-	{
-		printf("empty speed array's");
-		return (-1);
-	}
+
 	size_t index = 0;
-	while(speedIn[index] >= speedOut[index])
+	while(in->speedIn[index] > out->speedOut[index])
 	{
 		index++;
-		if(index > len)
+		if(index >= AMOUNT_SPEED)
 		{
 			printf("can't find crosspoint\n");
 			return (-2);
@@ -131,7 +127,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	//printf("speed_diff_in %.2f, speed_diff_out %.2f\n", speedDiffIn, speedDiffOut);
 
 	//calculate speed for every half a meter, assuming speed is linair...
-	/*double temp_speedIn[(int)DISTANCE_BETWEEN_POINTS*2];
+	double temp_speedIn[(int)DISTANCE_BETWEEN_POINTS*2];
 	double temp_speedOut[(int)DISTANCE_BETWEEN_POINTS*2];
 	double speedIncreaseIn;
 	double speedIncreaseOut;
@@ -225,4 +221,15 @@ double DataFindCallPoint(double time, double speedAtExchange, double exchangePoi
 {
 	//exchanhgePoint - (s(distance) = v(speed) * t(time) )
 	return (exchangePoint - (speedAtExchange * time));
+}
+
+void TestCrossPoint()
+{
+	AtleteData atleteData[2];
+	GetDoubleFromFile("times_old.txt", atleteData, 2);
+	AtleteSetSpeed(&atleteData[0]);
+	AtleteSetSpeed(&atleteData[1]);
+	printf("\nindex cross = %d\n", DataFindCrossPoint(&atleteData[0], &atleteData[1]));
+	printf("\nindex cross = %d\n", DataFindCrossPoint(&atleteData[1], &atleteData[0]));
+
 }

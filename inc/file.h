@@ -27,5 +27,8 @@ typedef struct _atleteData
 int GetDoubleFromFile(char* name, AtleteData *atleteData,
 			size_t len);
 
+extern int AtleteSetSpeed(AtleteData *atlete);
+
+
 void TestFile();
 #endif
