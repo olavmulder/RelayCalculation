@@ -2,7 +2,7 @@
 #define DATA_H
 
 #include "file.h"
-
+#include <assert.h>
 
 int CalculateRelay(double *timeIn, double *timeOut, size_t len);
 

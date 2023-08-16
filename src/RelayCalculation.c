@@ -12,10 +12,9 @@
 
  */
 
-#include "../inc/data.h"
-#include "../inc/file.h"
-#include <assert.h>
+#include "../inc/atlete.h"
 
+<<<<<<< HEAD
 void testData();
 void testCrossPoint();
 void testCallPoint();
@@ -25,22 +24,14 @@ void testExchangePoint();
 void testAvgSpeedToPoint();
 void testFindTakeOff();
 void testFile();
+=======
+int main() {
+>>>>>>> getdataFeature
 
-void PrintAllPossibleExchanges(AtleteData *atleteData, size_t len)
-{
-	for(size_t i = 0 ; i < len; i++)
-	{
-		for(size_t j = 0; j < len; j++)
-		{
-			if(j != i)
-			{
-				/*exchange i to j*/
-				printf("%s to %s: \n", atleteData[i].name, atleteData[j].name);
-				if(CalculateRelay(&atleteData[i].timesIn[0], &atleteData[j].timesOut[0],
-						AMOUNT_TIMES)< 0)
-				{
-					printf("CalculateRelay went wrong");
+	TestFile();
+	TestAtlete();
 
+<<<<<<< HEAD
 				}
 				printf("\n");
 				printf("\n");
@@ -196,3 +187,8 @@ void testFindTakeOff()
 
 }
 */
+=======
+	return (EXIT_SUCCESS);
+}
+
+>>>>>>> getdataFeature

@@ -43,18 +43,20 @@ int GetDoubleFromFile(char* name, AtleteData *atleteData, size_t len)
 		{
 			snprintf(atleteData[index].name, maxNameLength, "%s", tempAtletesName);
 			snprintf(lastName, maxNameLength, "%s", tempAtletesName);
-			for(size_t i = 0; i < AMOUNT_TIMES; i++)
+			atleteData[index].timesIn[0] = timeBuffer[0];
+			for(size_t i = 1; i < AMOUNT_TIMES; i++)
 			{
-				atleteData[index].timesIn[i] = timeBuffer[i];
+				atleteData[index].timesIn[i] = timeBuffer[i-1];
 			}
 		}
 		else if(strcmp(type, "out") == 0)
 		{
 			snprintf(atleteData[index].name, maxNameLength, "%s", tempAtletesName);
 			snprintf(lastName, maxNameLength, "%s", tempAtletesName);
-			for(size_t i = 0; i < AMOUNT_TIMES; i++)
+			atleteData[index].timesOut[0] = 0;
+			for(size_t i = 1; i < AMOUNT_TIMES; i++)
 			{
-				atleteData[index].timesOut[i] = timeBuffer[i];
+				atleteData[index].timesOut[i] = timeBuffer[i-1];
 			}
 		}
 		else
@@ -66,4 +68,30 @@ int GetDoubleFromFile(char* name, AtleteData *atleteData, size_t len)
 		if(firstLoop)firstLoop = false;
 	}
 	return (0);
+}
+
+void TestFile()
+{
+	AtleteData atleteData[2];
+	GetDoubleFromFile("times.txt", atleteData, 2);
+	for(size_t i = 0; i < 2;i++)
+	{
+		printf("in: ");
+		for(size_t j =0; j < AMOUNT_TIMES; j++)
+		{
+			printf("%s %.2f ", atleteData[i].name, atleteData[i].timesIn[j]);
+		}
+		printf("\n out: ");
+		for(size_t j =0; j < AMOUNT_TIMES; j++)
+		{
+			printf("%s %.2f ", atleteData[i].name, atleteData[i].timesOut[j]);
+		}
+		printf("\n\n");
+	}
+	/*amount atletes in file is higher than given
+	must change input file
+	 *
+	 */
+	//assert(GetDoubleFromFile("times.txt", atleteData, 1) == -1);
+	//assert(GetDoubleFromFile("times.txt", atleteData, 2) == -1);
 }
