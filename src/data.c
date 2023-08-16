@@ -14,6 +14,7 @@ uint8_t ARRAY_SCAN_POINTS[] = {10, 20, 30};
  * Do all calcualtions with given input
  * @return
  */
+/*
 int CalculateRelay(double *timeIn, double *timeOut, size_t len)
 {
 	double speedIn[len];
@@ -34,7 +35,7 @@ int CalculateRelay(double *timeIn, double *timeOut, size_t len)
 	double callPoint = DataFindCallPoint(1,speedIn[index], exchange);
 	printf("callpoint: %.2f\n", callPoint);
 	return (0);
-}
+}*/
 /**
  * calculate avg speed between detection points
  * @param speed
@@ -42,6 +43,7 @@ int CalculateRelay(double *timeIn, double *timeOut, size_t len)
  * @param len
  * @return
  */
+/*
 int DataSetSpeed(double *speed, double *time, size_t len)
 {
 	if(speed == NULL || time == NULL)
@@ -55,40 +57,7 @@ int DataSetSpeed(double *speed, double *time, size_t len)
 	}
 	return (0);
 }
-
-int DataGet(double *arrOut, size_t len)
-{
-	if(arrOut == NULL)
-	{
-		return (-1);
-	}
-	for(uint8_t i = 0 ; i < AMOUNT_TIMES; i++)
-	{
-		char data[len];
-		memset(data, '\0', len);
-		int c;
-		size_t count = 0;
-		printf("time %d: ", i);
-		while(1)
-		{
-			c = fgetc(stdin);
-			if(c == EOF || c == 13 || c == '\n') //enter
-			{
-				break;
-			}
-			else
-			{
-				data[count] = c;
-			}
-			count++;
-			if(count == len)
-				break;
-		}
-		arrOut[i] = atof(data);
-	}
-	return (0);
-}
-
+*/
 
 int DataFindCrossPoint(double *speedIn, double *speedOut, size_t len)
 {
@@ -118,9 +87,9 @@ int DataFindCrossPoint(double *speedIn, double *speedOut, size_t len)
  * 			speedDifIn = 3 - 3.5 =-0.5
  * @return
  */
+/*
 double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t len)
 {
-	len = len;
 	if(speedIn == NULL || speedOut == NULL)
 	{
 		printf("empty array\n");
@@ -129,7 +98,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	//no found crosspoint from dataFindCrossPoint
 	if(index == -2)
 	{
-		/*exchange at max distnace -distance between_points when there is no cross point*/
+		//exchange at max distnace -distance between_points when there is no cross point
 		printf("AMOUNT_tIMES -1 = %d", AMOUNT_TIMES -1);
 		return  (AMOUNT_TIMES-1 * DISTANCE_BETWEEN_POINTS);
 	}
@@ -140,7 +109,8 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	speedDiffIn = speedIn[index] - speedIn[index-1];
 	speedDiffOut = speedOut[index] - speedOut[index-1];
 	printf("speeddefin %.2f, speeddif out %.2f\n", speedDiffIn, speedDiffOut);
-	/*else
+	*/
+	/* else
 	{
 		indexZero = true;
 		speedDiffIn = 0.00;
@@ -148,7 +118,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 		index = 0;
 	}*/
 	//calculate speed for every half a meter, assuming speed is linair...
-	double temp_speedIn[(int)DISTANCE_BETWEEN_POINTS*2];
+	/*double temp_speedIn[(int)DISTANCE_BETWEEN_POINTS*2];
 	double temp_speedOut[(int)DISTANCE_BETWEEN_POINTS*2];
 	double speedIncreaseIn;
 	double speedIncreaseOut;
@@ -178,7 +148,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 		}
 		else if(cross == -2)
 		{
-			/*exchange at max distnace -distance between_points when there is no cross point*/
+			//exchange at max distnace -distance between_points when there is no cross point
 			return  ((AMOUNT_TIMES-1) * DISTANCE_BETWEEN_POINTS);
 		}
 	}
@@ -188,7 +158,7 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	}
 	return (-1);
 
-}
+}*/
 
 double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size_t len)
 {

@@ -13,5 +13,6 @@
 void CalculateSpeed(double *speed, double *times);
 int AtleteSetSpeed(AtleteData *atlete);
 
+void TestAtlete();
 
 #endif /* ATLETE_H_ */
