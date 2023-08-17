@@ -223,6 +223,11 @@ double DataFindCallPoint(double time, double speedAtExchange, double exchangePoi
 	return (exchangePoint - (speedAtExchange * time));
 }
 
+/*
+ * kijk linkedIn & bedrijf, ingeintresserd in bedrijf
+ * veel leren?!
+ * Misschien nog praten met collega's
+ * */
 void TestCrossPoint()
 {
 	AtleteData atleteData[2];
