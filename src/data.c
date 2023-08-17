@@ -93,18 +93,9 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	//no found crosspoint from dataFindCrossPoint
 	if(index == -2)
 	{
-<<<<<<< HEAD
-		/*exchange at max distance -distance between_points when there is no cross point*/
-		return  (MAX_EXCHANGE_DISTANCE);
-||||||| c720500
-		/*exchange at max distance -distance between_points when there is no cross point*/
-		printf("max exchange distance %d", MAX_EXCHANGE_DISTANCE);
-		return  (MAX_EXCHANGE_DISTANCE);
-=======
 		//exchange at max distnace -distance between_points when there is no cross point
 		printf("AMOUNT_tIMES -1 = %d", AMOUNT_TIMES -1);
 		return  (AMOUNT_TIMES-1 * DISTANCE_BETWEEN_POINTS);
->>>>>>> crossPointFeature
 	}
 
 	double speedDiffIn;
@@ -179,28 +170,9 @@ double DataFindExchangePoint(int index, double*speedIn, double *speedOut, size_t
 	}
 	return (-1);
 
-<<<<<<< HEAD
-}
-/**
- * get time to reach point for runner including
- * the reaction time
- * @param exchangePoint
- * @param time
- * @param speed
- * @param len
- * @return
- */
-double GetTimeToPoint(double exchangePoint, double *time, double *speed,
-						size_t len, double reactionTime)
-||||||| c720500
-}
-
-double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size_t len)
-=======
 }*/
 
 double GetAvgSpeedToPoint(double exchangePoint, double*time, double* speed, size_t len)
->>>>>>> crossPointFeature
 {
 	double tempExchange = exchangePoint;
 	size_t i = 0;
